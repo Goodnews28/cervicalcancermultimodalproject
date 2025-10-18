@@ -68,10 +68,7 @@ This comprehensive diagnostic approach is rarely explored in high school-level r
 
 - **Languages**: Python
 - **Libraries**: scikit-learn, TensorFlow/Keras, pandas, OpenCV
-- **Data**: GEO microarray datasets, TCGA (if applicable), public cytology image sets
-
----
-
+- **Data**: GEO microarray datasets, TCGA_CESC, Herlev Pap Smear cytology image sets
 
 ---
 
@@ -81,12 +78,6 @@ This model has the potential to:
 - Enable **cost-effective, non-invasive screening**
 - Assist **early intervention** in high-risk populations
 - Promote **equity in cervical cancer diagnostics**, especially in underserved regions
-
----
-
-## Citation (if applicable)
-
-If you use public datasets or models from this work, please cite the original sources appropriately. This project is intended for **educational and research purposes only**.
 
 ---
 
