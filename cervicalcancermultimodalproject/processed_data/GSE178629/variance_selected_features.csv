@@ -1,0 +1,13 @@
+feature
+miR21_expression
+miR21_log2
+miR21_zscore
+pelvic_pain
+abnormal_bleeding
+hpv_vaccinated
+smoker
+number_of_sexual_partners
+prior_screening
+hiv_status
+parity
+socioeconomic_status
