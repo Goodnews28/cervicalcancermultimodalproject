@@ -13,9 +13,11 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 # === CONFIG ===
+# I point this to the CSV that drives this script so I can swap datasets quickly.
 CSV_PATH = './processed_data/Herlev/herlev_labels_with_simulated.csv'
 IMAGE_FEATURE_OUTPUT = './processed_data/Herlev/herlev_image_features.csv'
 DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
+# I tune batch size based on memory limits and training stability.
 BATCH_SIZE = 32
 IMAGE_SIZE = 224
 
@@ -41,6 +43,7 @@ class HerlevDataset(Dataset):
     def __getitem__(self, idx):
         row = self.df.iloc[idx]
         img_path = row['image_path']
+        # I load each image on-the-fly to avoid storing all image tensors in RAM.
         image = Image.open(img_path).convert('RGB')
         image = self.transform(image)
         return image, idx
@@ -75,6 +78,7 @@ feature_df = pd.DataFrame(features, columns=[f'feat_{i}' for i in range(features
 final_df = pd.concat([df.drop(columns=['width', 'height']), feature_df], axis=1)
 
 # Export
+# I persist processed outputs so later scripts can reuse the exact same data snapshot.
 final_df.to_csv(IMAGE_FEATURE_OUTPUT, index=False)
 print(f"\nFeature extraction complete. Saved to: {IMAGE_FEATURE_OUTPUT}")
 

@@ -4,6 +4,8 @@ import random
 import os
 
 # Set seeds for reproducibility
+# np.random.seed() is for numpy, random.seed() is for the built-in random module.
+# Ensure that the numpy random operations yield the same results across different runs
 np.random.seed(42)
 random.seed(42)
 
@@ -48,6 +50,7 @@ def process_and_simulate(dataset_name):
     try:
         df = pd.read_csv(input_file)
         df_sim = simulate_clinical_features(df)
+        # I persist processed outputs so later scripts can reuse the exact same data snapshot.
         df_sim.to_csv(output_file, index=False)
         print(f"Simulated clinical data saved to {output_file}")
     except Exception as e:

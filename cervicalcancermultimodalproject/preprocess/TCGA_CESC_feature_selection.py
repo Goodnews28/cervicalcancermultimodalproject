@@ -11,7 +11,7 @@ from sklearn.preprocessing import StandardScaler, LabelEncoder
 # Load TCGA_CESC dataset
 df = pd.read_csv('./processed_data/TCGA_CESC/TCGA_CESC_with_simulated.csv')
 
-# ---- Simulate binary target label (if needed) ----
+# ---- Simulate binary target label ----
 df['target'] = (df['miR21_log2'] > df['miR21_log2'].median()).astype(int)
 
 # Define target and features
@@ -38,6 +38,7 @@ selected_vt = X.columns[vt.get_support()].tolist()
 if mir21_col not in selected_vt:
     selected_vt.append(mir21_col)
 
+# I persist processed outputs so later scripts can reuse the exact same data snapshot.
 pd.DataFrame({'feature': selected_vt}).to_csv(
     './processed_data/TCGA_CESC/variance_selected_features.csv', index=False)
 
@@ -48,6 +49,7 @@ f_scores = pd.Series(anova.scores_, index=X.columns).sort_values(ascending=False
 
 f_scores.reset_index().rename(columns={
     'index': 'feature', 0: 'f_score'
+# I persist processed outputs so later scripts can reuse the exact same data snapshot.
 }).to_csv('./processed_data/TCGA_CESC/anova_feature_scores.csv', index=False)
 
 # 3. Random Forest Importance
@@ -57,6 +59,7 @@ importances = pd.Series(rf.feature_importances_, index=X.columns).sort_values(as
 
 importances.reset_index().rename(columns={
     'index': 'feature', 0: 'rf_importance'
+# I persist processed outputs so later scripts can reuse the exact same data snapshot.
 }).to_csv('./processed_data/TCGA_CESC/random_forest_feature_importance.csv', index=False)
 
 print("TCGA_CESC feature selection completed.")
@@ -120,6 +123,7 @@ for col in X.select_dtypes(include='object').columns:
 
 # === Standardize ===
 X = X.select_dtypes(include=[np.number])
+# I standardize numeric features to mean 0 / std 1 before modeling.
 X_scaled = StandardScaler().fit_transform(X)
 
 # === Run t-SNE ===

@@ -11,7 +11,7 @@ from sklearn.preprocessing import StandardScaler, LabelEncoder
 # Load the dataset
 df = pd.read_csv('./processed_data/GSE178629/GSE178629_with_simulated.csv')
 
-# ---- Simulate a target label (if not available) ----
+# ---- Simulate a target label----
 # Example: classify based on miR21_log2 being above median
 df['target'] = (df['miR21_log2'] > df['miR21_log2'].median()).astype(int)
 
@@ -40,6 +40,7 @@ selected_vt = X.columns[vt.get_support()].tolist()
 if mir21_col not in selected_vt:
     selected_vt.append(mir21_col)
 df_vt = pd.DataFrame({'feature': selected_vt})
+# I persist processed outputs so later scripts can reuse the exact same data snapshot.
 df_vt.to_csv('./processed_data/GSE178629/variance_selected_features.csv', index=False)
 
 # 2. ANOVA F-test
@@ -48,6 +49,7 @@ anova.fit(X, y)
 f_scores = pd.Series(anova.scores_, index=X.columns).sort_values(ascending=False)
 df_anova = f_scores.reset_index()
 df_anova.columns = ['feature', 'f_score']
+# I persist processed outputs so later scripts can reuse the exact same data snapshot.
 df_anova.to_csv('./processed_data/GSE178629/anova_feature_scores.csv', index=False)
 
 # 3. Random Forest
@@ -56,6 +58,7 @@ rf.fit(X, y)
 importances = pd.Series(rf.feature_importances_, index=X.columns).sort_values(ascending=False)
 df_rf = importances.reset_index()
 df_rf.columns = ['feature', 'rf_importance']
+# I persist processed outputs so later scripts can reuse the exact same data snapshot.
 df_rf.to_csv('./processed_data/GSE178629/random_forest_feature_importance.csv', index=False)
 
 print("Feature selection completed and saved.")
@@ -117,6 +120,7 @@ for col in X.select_dtypes(include='object').columns:
 
 # === Standardize numeric values ===
 X = X.select_dtypes(include=[np.number])
+# I standardize numeric features to mean 0 / std 1 before modeling.
 X_scaled = StandardScaler().fit_transform(X)
 
 # === Run t-SNE ===

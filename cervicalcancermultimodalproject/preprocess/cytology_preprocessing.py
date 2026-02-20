@@ -10,6 +10,7 @@ CSV_OUTPUT = './processed_data/Herlev/herlev_labels.csv'
 TARGET_SIZE = (224, 224)
 
 # === Label Mapping ===
+# Map the original 7 subclasses to binary labels (Normal vs Abnormal)
 label_map = {
     'carcinoma_in_situ': 'Abnormal',
     'light_dysplastic': 'Abnormal',
@@ -30,6 +31,7 @@ print(f"Found {len(subclasses)} subclass folders: {subclasses}")
 image_data = []
 
 # === Image Loop ===
+# Loop through each subclass folder and process images
 for subclass in subclasses:
     subclass_dir = os.path.join(HERLEV_RAW_DIR, subclass)
     if not os.path.isdir(subclass_dir) or subclass not in label_map:
@@ -69,12 +71,13 @@ for subclass in subclasses:
         except Exception as e:
             print(f"Failed to process {file_path}: {e}")
 # === Create DataFrame and Save CSV ===
+#datframe stores metadata about each image for the CSV output.
 df = pd.DataFrame(image_data)
 
-# Make sure the directory exists for the CSV
+# Makes sure the directory exists for the CSV
 os.makedirs(os.path.dirname(CSV_OUTPUT), exist_ok=True)
 
-# Save the DataFrame to CSV
+# Saves the DataFrame to CSV
 df.to_csv(CSV_OUTPUT, index=False)
 
 print(f"\nProcessed {len(df)} images.")
